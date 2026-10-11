@@ -1,11 +1,13 @@
 """Part 4: command-line interface for the folder audit."""
 
 import argparse
+import os
+import sys
 from pathlib import Path
 
-from .data import AuditSummary, build_summary
-from .errors import FolderAuditError, scan_folder_safely
-from .files import save_json_report
+from folder_audit.data import AuditSummary, build_summary
+from folder_audit.errors import FolderAuditError, scan_folder_safely
+from folder_audit.files import save_json_report
 
 
 def positive_integer(value: str) -> int:
@@ -54,7 +56,7 @@ def print_summary(summary: AuditSummary) -> None:
     raise NotImplementedError
 
 
-def main(argv: list[str] | None = None) -> int:
+def main() -> None:
     """Run the CLI and return its exit code.
 
     TODO 5:
@@ -65,7 +67,8 @@ def main(argv: list[str] | None = None) -> int:
       report destination;
     - catch FolderAuditError and report it on stderr;
     - catch OSError from writing the report separately;
-    - return 0 after success and 2 after a handled error;
-    - do not catch KeyboardInterrupt or use ``except Exception``.
     """
-    raise NotImplementedError
+    folder = sys.argv[1]
+    for plik in scan_folder_safely(folder):
+        print(plik, os.path.getsize(folder + "/" + plik))
+
